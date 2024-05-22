@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Apuestas</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        .result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Distribución de Apuestas</h2>
+    <form id="betForm">
+        <label for="momioA">Momio A:</label>
+        <input type="number" id="momioA" name="momioA" step="0.01" required><br><br>
+        
+        <label for="momioB">Momio B:</label>
+        <input type="number" id="momioB" name="momioB" step="0.01" required><br><br>
+        
+        <label for="momioC">Momio C:</label>
+        <input type="number" id="momioC" name="momioC" step="0.01" required><br><br>
+        
+        <label for="totalFichas">Total Fichas:</label>
+        <input type="number" id="totalFichas" name="totalFichas" step="0.01" required><br><br>
+        
+        <button type="button" onclick="calcularApuestas()">Calcular Apuestas</button>
+    </form>
+    
+    <div class="result" id="result">
+        <!-- Los resultados se mostrarán aquí -->
+    </div>
+</div>
+
+<script>
+function calcularApuestas() {
+    // Obtener los valores de los momios y el total de fichas
+    let momioA = parseFloat(document.getElementById('momioA').value);
+    let momioB = parseFloat(document.getElementById('momioB').value);
+    let momioC = parseFloat(document.getElementById('momioC').value);
+    let totalFichas = parseFloat(document.getElementById('totalFichas').value);
+
+    // Calcular las probabilidades implícitas
+    let pA = 1 / momioA;
+    let pB = 1 / momioB;
+    let pC = 1 / momioC;
+
+    // Calcular la suma de probabilidades
+    let sumaProbabilidades = pA + pB + pC;
+
+    // Verificar si hay oportunidad de arbitraje
+    if (sumaProbabilidades > 1) {
+        // Calcular las apuestas necesarias
+        let apuestaA = (totalFichas * pA) / sumaProbabilidades;
+        let apuestaB = (totalFichas * pB) / sumaProbabilidades;
+        let apuestaC = (totalFichas * pC) / sumaProbabilidades;
+
+        // Calcular el retorno para cada resultado
+        let retornoA = apuestaA * momioA;
+        let retornoB = apuestaB * momioB;
+        let retornoC = apuestaC * momioC;
+
+        // Mostrar los resultados
+        document.getElementById('result').innerHTML = `
+            <h3>Resultados de Apuestas</h3>
+            <p>Apuesta en A: ${apuestaA.toFixed(2)} fichas</p>
+            <p>Apuesta en B: ${apuestaB.toFixed(2)} fichas</p>
+            <p>Apuesta en C: ${apuestaC.toFixed(2)} fichas</p>
+            <p>Retorno si gana A: ${retornoA.toFixed(2)} fichas</p>
+            <p>Retorno si gana B: ${retornoB.toFixed(2)} fichas</p>
+            <p>Retorno si gana C: ${retornoC.toFixed(2)} fichas</p>
+        `;
+    } else {
+        document.getElementById('result').innerHTML = `<p>No hay oportunidad de arbitraje con los momios proporcionados.</p>`;
+    }
+}
+</script>
+
+</body>
+</html>
